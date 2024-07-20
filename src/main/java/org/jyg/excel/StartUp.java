@@ -87,6 +87,9 @@ public class StartUp {
             if(childFile.getName().startsWith("$")){
                 return;
             }
+            if(childFile.getName().startsWith("~")){
+                return;
+            }
             if ( !childFile.getName().endsWith(".xlsx") && !childFile.getName().endsWith(".xls") ){
                 return;
             }

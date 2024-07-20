@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -146,15 +147,27 @@ public class ExcelSheetProcessor {
                     columnIndex2nameMap.put(cell.getColumnIndex(), String.valueOf(value));
                 }
                 if (rowNum == fieldStartlineIndex + 1) {
-                    String fieldName = columnIndex2nameMap.getOrDefault(cell.getColumnIndex(), "unkonwn");
-                    fieldName2TypeMap.put(fieldName, String.valueOf(value));
+                    String fieldName = columnIndex2nameMap.get(cell.getColumnIndex());
+                    if(fieldName == null){
+                        System.out.println(sheetName + " ,find unkonwn fieldName type : " + value);
+                    }else {
+                        fieldName2TypeMap.put(fieldName, String.valueOf(value));
+                    }
                 }
 
                 if (rowNum >= fieldStartlineIndex + 3) {
-                    name2cellValueMap.put(columnIndex2nameMap.getOrDefault(cell.getColumnIndex(), "unkonwn"), value);
+
+                    String fieldName = columnIndex2nameMap.get(cell.getColumnIndex());
+                    if(fieldName == null){
+                        System.out.println(sheetName + " , unkonwn fieldName value : " + value);
+                    }else {
+                        name2cellValueMap.put(fieldName, value);
+                    }
                 }
 
 //                System.out.println("cell column : " + cell.getColumnIndex() + " row : " + cell.getRowIndex() + "  " + value);
+
+
 
             }
 
