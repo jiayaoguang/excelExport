@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -149,7 +150,7 @@ public class ExcelSheetProcessor {
                 if (rowNum == fieldStartlineIndex + 1) {
                     String fieldName = columnIndex2nameMap.get(cell.getColumnIndex());
                     if(fieldName == null){
-                        System.out.println(sheetName + " ,find unkonwn fieldName type : " + value);
+                        System.out.println(sheetName + " ,find unknown fieldName type : " + value);
                     }else {
                         fieldName2TypeMap.put(fieldName, String.valueOf(value));
                     }
@@ -159,8 +160,106 @@ public class ExcelSheetProcessor {
 
                     String fieldName = columnIndex2nameMap.get(cell.getColumnIndex());
                     if(fieldName == null){
-                        System.out.println(sheetName + " , unkonwn fieldName value : " + value);
+                        System.out.println(sheetName + " , unknown fieldName value : " + value);
                     }else {
+                        String type = fieldName2TypeMap.get(fieldName);
+                        if(StringUtils.isNotEmpty(type)){
+                            type = type.toLowerCase();
+                            switch (type){
+                                case "byte":
+                                case "short":
+                                case "int":
+                                case "long":
+                                case "float":
+                                case "double":{
+                                    if(value == null){
+                                        value = 0;
+                                    }else {
+                                        value = NumberUtils.toLong(value.toString());
+                                    }
+                                    break;
+                                }
+                                case "bool":
+                                case "boolean":{
+                                    if(value == null){
+                                        value = false;
+                                    }else if (!(value instanceof Boolean)) {
+                                        value = ("true".equalsIgnoreCase(value.toString()));
+                                    }
+                                    break;
+                                }
+                                case "string[]":{
+                                    if(value == null){
+                                        value = new String[0];
+                                    }else {
+                                        value = value.toString().split(",");
+                                    }
+                                    break;
+                                }
+
+
+                                case "byte[]":
+                                case "short[]":
+                                case "int[]":
+                                case "long[]":{
+                                    if(value == null){
+                                        value = new long[0];
+                                    }else {
+                                        String[] numStrs = value.toString().split(",");
+                                        long[] nums = new long[numStrs.length];
+                                        for(int i=0;i<numStrs.length;i++){
+                                            nums[i] = NumberUtils.toLong(numStrs[i] , 0L);
+                                        }
+                                        value = nums;
+                                    }
+                                    break;
+                                }
+
+                                case "float[]":
+                                case "double[]":{
+                                    if(value == null){
+                                        value = new double[0];
+                                    }else {
+                                        String[] numStrs = value.toString().split(",");
+                                        double[] nums = new double[numStrs.length];
+                                        for(int i=0;i<numStrs.length;i++){
+                                            nums[i] = NumberUtils.toDouble(numStrs[i] , 0.0d);
+                                        }
+                                        value = nums;
+                                    }
+                                    break;
+                                }
+
+
+                                case "char[]":{
+                                    if(value == null){
+                                        value = new char[0];
+                                    }else {
+                                        String[] numStrs = value.toString().split(",");
+                                        double[] chars = new double[numStrs.length];
+                                        for(int i=0;i<numStrs.length;i++){
+                                            chars[i] = numStrs[i].charAt(0);
+                                        }
+                                        value = chars;
+                                    }
+                                    break;
+                                }
+
+                                case "string": {
+                                    if(value == null){
+                                        value = "";
+                                    }else if (!(value instanceof String)) {
+                                        value = value.toString();
+                                    }
+                                    break;
+                                }
+                                default:
+                                    throw new UnsupportedOperationException("unknown type field type : "+ type);
+
+
+                            }
+                        }
+
                         name2cellValueMap.put(fieldName, value);
                     }
                 }

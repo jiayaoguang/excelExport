@@ -3,8 +3,10 @@ namespace Config;
     public class ConfTest {
 
         private string name;
+        private long[] times;
         private int id;
         private long time;
+        private String[] names;
 
         public ConfTest() {
         }
@@ -15,6 +17,13 @@ namespace Config;
         }
         public void setName(string name) {
             this.name = name;
+        }
+        private long[] times;
+        public long[] getTimes() {
+            return times;
+        }
+        public void setTimes(long[] times) {
+            this.times = times;
         }
         private int id;
         public int getId() {
@@ -29,6 +38,13 @@ namespace Config;
         }
         public void setTime(long time) {
             this.time = time;
+        }
+        private String[] names;
+        public String[] getNames() {
+            return names;
+        }
+        public void setNames(String[] names) {
+            this.names = names;
         }
 
     }
