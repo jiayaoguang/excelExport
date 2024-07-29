@@ -6,10 +6,7 @@ import freemarker.template.Template;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TemplateUtil {
 
@@ -40,7 +37,7 @@ public class TemplateUtil {
 
     public static byte[] createJavaBytes(String className,Map<String, String> fieldName2TypeMap){
 
-        fieldName2TypeMap = new HashMap<>(fieldName2TypeMap);
+        fieldName2TypeMap = new LinkedHashMap<>(fieldName2TypeMap);
 
 
         for(String field : new ArrayList<>(fieldName2TypeMap.keySet())){
@@ -62,7 +59,7 @@ public class TemplateUtil {
     public static byte[] createCSharpBytes(String className,Map<String, String> fieldName2TypeMap){
 
 
-        fieldName2TypeMap = new HashMap<>(fieldName2TypeMap);
+        fieldName2TypeMap = new LinkedHashMap<>(fieldName2TypeMap);
 
 
         for(String field : new ArrayList<>(fieldName2TypeMap.keySet())){

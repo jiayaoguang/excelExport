@@ -113,7 +113,7 @@ public class ExcelSheetProcessor {
 
 //            System.out.println("rowNum" + rowNum);
 
-            Map<String, Object> name2cellValueMap = new HashMap<>();
+            Map<String, Object> name2cellValueMap = new LinkedHashMap<>();
 
             if(rowNum >= fieldStartlineIndex + 3){
                 valuesList.add(name2cellValueMap);
@@ -169,13 +169,24 @@ public class ExcelSheetProcessor {
                                 case "byte":
                                 case "short":
                                 case "int":
-                                case "long":
+                                case "long":{
+                                    if(value == null){
+                                        value = 0;
+                                    }else if(value.toString().contains(".")){
+                                        double doubleValue =  Double.parseDouble(value.toString());
+                                        value = (long)doubleValue;
+                                    }else {
+                                        value = Long.parseLong(value.toString());
+                                    }
+                                    break;
+                                }
+
                                 case "float":
                                 case "double":{
                                     if(value == null){
                                         value = 0;
                                     }else {
-                                        value = NumberUtils.toLong(value.toString());
+                                        value = Double.parseDouble(value.toString());
                                     }
                                     break;
                                 }
@@ -197,18 +208,17 @@ public class ExcelSheetProcessor {
                                     break;
                                 }
 
-
                                 case "byte[]":
                                 case "short[]":
                                 case "int[]":
                                 case "long[]":{
-                                    if(value == null){
+                                    if(value == null || "".equals(value)){
                                         value = new long[0];
                                     }else {
                                         String[] numStrs = value.toString().split(",");
                                         long[] nums = new long[numStrs.length];
                                         for(int i=0;i<numStrs.length;i++){
-                                            nums[i] = NumberUtils.toLong(numStrs[i] , 0L);
+                                            nums[i] = Long.parseLong(numStrs[i] );
                                         }
                                         value = nums;
                                     }
@@ -223,7 +233,7 @@ public class ExcelSheetProcessor {
                                         String[] numStrs = value.toString().split(",");
                                         double[] nums = new double[numStrs.length];
                                         for(int i=0;i<numStrs.length;i++){
-                                            nums[i] = NumberUtils.toDouble(numStrs[i] , 0.0d);
+                                            nums[i] = Double.parseDouble(numStrs[i]);
                                         }
                                         value = nums;
                                     }
