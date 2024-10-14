@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Row;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -287,7 +288,7 @@ public class ExcelSheetProcessor {
         try {
             String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(valuesList);
 
-            FileUtils.writeStringToFile(new File(jsonOutPath + "/"+mappingClassName + ".json") , json);
+            FileUtils.writeStringToFile(new File(jsonOutPath + "/"+mappingClassName + ".json") , json , StandardCharsets.UTF_8.name());
             makeJavaFile(mappingClassName , fieldName2TypeMap);
             makeCSharpFile(mappingClassName , fieldName2TypeMap);
         } catch (IOException e ) {
